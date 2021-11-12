@@ -1,3 +1,15 @@
-.active {
-  background-color: brown;
+.dmbtn-active {
+  background-color: cornflowerblue;
+  color: aliceblue;
+}
+
+.paramContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.projectionMethod {
+  padding-right: 3%;
+  padding-top: 5%;
 }

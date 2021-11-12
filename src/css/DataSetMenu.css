@@ -19,7 +19,6 @@
 .menu.active {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
 }
 
 .menu ul {
@@ -66,4 +65,30 @@
 
 .menu-trigger img {
   border-radius: 90px;
+}
+
+.dataselect-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.left-section > label {
+  padding-left: 2%;
+  padding-top: 0.5%;
+}
+
+.controlsContainer > * {
+  padding-top: 5%;
+}
+
+.options-container {
+  padding-top: 5%;
 }

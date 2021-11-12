@@ -6,12 +6,15 @@ import Vizl from './Vizl.js';
 import Controls from './Controls.js';
 import axios from 'axios';
 import Loader from './components/Loader';
+import LocalInspection from './components/LocalInspection.js';
 import Visualization from './components/Visualization.js';
 
 
 const App = () => {
 
   const [database, setDatabase] = React.useState([]);
+  const [comparison, setComparison] = React.useState([]);
+  const [brushedWords, setBrushedWords] = React.useState(null);
   const [selectedModels, setSelectedModels] = React.useState({
                                                               datasetId: 1,
                                                               modelsIdx: [0,1],
@@ -34,22 +37,28 @@ const [loading, setLoading] = React.useState(true);
   
   return (
     <div className="App">
-      <div className="container">
+      <div className="mainContainer">
       {loading? 
       ( <Loader/>
       ): 
         ( <>
-          <div>
-            <Controls database={database} 
-                      selectedModels={selectedModels} 
-                      setSelectedModels={setSelectedModels}
-                      parameters={parameters}
-                      setParameters={setParameters}         
-              />
+          <div className="miniboard">
+            <div className="toolBox">
+              <Controls database={database} 
+                        selectedModels={selectedModels} 
+                        setSelectedModels={setSelectedModels}
+                        parameters={parameters}
+                        setParameters={setParameters}       
+                />
+            </div>
+            <div className="localplot-container">
+                  <LocalInspection brushedWords={brushedWords} setBrushedWords={setBrushedWords} dataset={database[selectedModels.datasetId-1]} selectedModels={selectedModels} parameters={parameters} 
+                          comparison={comparison} setComparison={setComparison}/>
+            </div>
           </div>
           <div className="canvas">
-            <Vizl database={database} selectedModels={selectedModels} parameters={parameters}/>
-            <Visualization database={database} selectedModels={selectedModels} parameters={parameters}/>
+            <Visualization dataset={database[selectedModels.datasetId-1]} selectedModels={selectedModels} parameters={parameters} 
+                          comparison={comparison} setComparison={setComparison} setBrushedWords={setBrushedWords}/>
           </div>
           </>
         )}

@@ -1,16 +1,34 @@
-.container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    height: 100vh;
+.mainContainer {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
 }
 
 .canvas {
-    flex: 3;
-    /* background-color: brown; */
+  flex: 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.miniboard {
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .toolBox {
-    flex: 1;
-    /* background-color: coral; */
+  display: flex;
+  flex: 2;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.localplot-container {
+  flex: 5;
+  background-color: aliceblue;
+  height: 100%;
+  width: 100%;
+  overflow-x: scroll;
 }

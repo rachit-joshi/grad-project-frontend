@@ -3,13 +3,20 @@ import * as d3 from 'd3';
 var _ = require('underscore');
 const DIVERGING_COLORS = d3.schemeRdYlBu[10];
 
-const Histogram = ({model1, model2, parameters}) => {
+const Histogram = ({dataset, models, parameters, comparison, setComparison, distanceMetric, setHightlightPlots, setBrushedWords, spaceSaver}) => {
+
+    const [simValues, setSimValues] = React.useState([]);
 
     React.useEffect(()=>{
-        createHist(model1, model2, parameters)
-    },[model1, model2, parameters])
+        setComparison([]);
+        createHist();
+    },[parameters,spaceSaver])
+    
+    React.useEffect(()=>{
+        createHist()
+    })
 
-    function compute_iou_similarities(data1, data2, k, metric, method) {
+    function compute_iou_similarities(data1, data2, k, metric) {
         var to_return = []
         for (var i = 0; i < data1.length; i++) {
             var word1_neighbors = data1[i]['nearest_neighbors'][metric].knn_ind.slice(0, k);
@@ -23,7 +30,7 @@ const Histogram = ({model1, model2, parameters}) => {
     }
 
     function createSimilarityHistogram(values, onBrush, brushSelectedIdxs) {
-        d3.selectAll('.similarity-histogram-container > *').remove();
+        d3.selectAll(`#${models[0]}${models[1]}${distanceMetric} > *`).remove();
     
         // maps 1.0 to the [0.9 - 1.0) bucket
         const shrunkValues = values.map(value => {
@@ -31,12 +38,14 @@ const Histogram = ({model1, model2, parameters}) => {
         })
     
         // set the dimensions and margins of the graph
+        let widthBaseVal, heightBaseVal=130;
+        spaceSaver ? (widthBaseVal = heightBaseVal + 10) : widthBaseVal = heightBaseVal = 180
         const margin = {top: 20, right: 20, bottom: 20, left: 10},
-            width = 180 - margin.left - margin.right,
-            height = 170 - margin.top - margin.bottom;
+            width = widthBaseVal - margin.left - margin.right,
+            height = heightBaseVal - margin.top - margin.bottom;
     
         // append the svg object to the body of the page
-        var svg = d3.select(".similarity-histogram-container")
+        var svg = d3.select(`#${models[0]}${models[1]}${distanceMetric}`)
           .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -116,20 +125,43 @@ const Histogram = ({model1, model2, parameters}) => {
             }
             onBrush(selectedIdxs);
         });
-    
+        
+        svg.on("click", () => {
+            setHightlightPlots({models: models,metric: distanceMetric, simValues: simValues})
+        });
+
     }
     const onBrush = (data) => {
-        console.log(data);
+        data ? setBrushedWords({models: models, metric: distanceMetric, brushedWordsIdx: data}) : setBrushedWords(null);
+        return;
     }
 
-    const createHist = (model1, model2, parameters) => {
-        var sim = compute_iou_similarities(model1, model2, parameters.nearestNeighbors, parameters.distanceMetric);
-        console.log(sim);
-        createSimilarityHistogram(sim, onBrush, null);
+    const checkComparisons = () => {
+        let result = false;
+        comparison.forEach((comp) => {
+            if(comp.models.includes(models[0]) && comp.models.includes(models[1]) && comp.metric === distanceMetric ){
+                setSimValues(comp.simValues);
+                result = true;
+            }
+        })
+        return result;
+    }
+    
+    const createHist = () => {
+        if(!checkComparisons()) {
+            var sim = compute_iou_similarities(dataset.modelData[models[0]], dataset.modelData[models[1]], parameters.nearestNeighbors, distanceMetric);
+            setSimValues(sim);
+            setComparison(comparison => [...comparison, {models: models,metric: distanceMetric, simValues: sim}]);
+        }
+        createSimilarityHistogram(simValues, onBrush, null);
     };
 
     return (
-        <div className='similarity-histogram-container'></div>
+        <>
+             
+                <div id={`${models[0]}${models[1]}${distanceMetric}`}></div>
+            
+        </>
     )
 }
 
