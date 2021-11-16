@@ -3,10 +3,10 @@ import {Row, Col, Dropdown} from 'react-bootstrap';
 
 
 const LocalInspecControls = ({baseComparisonModel, setBaseComparisonModel, selectedModelsIdx, datasetModels, filterSelect, setFilterSelect}) => {
-    const filterOptions = ["Least Similar","Most Similar"];
+    const filterOptions = ["least similar","most similar"];
 
     React.useEffect(() => {
-        console.log("base:",baseComparisonModel,"selectedIdx:", selectedModelsIdx,"datasetModels:", datasetModels)
+        //console.log("base:",baseComparisonModel,"selectedIdx:", selectedModelsIdx,"datasetModels:", datasetModels)
     }, [baseComparisonModel, selectedModelsIdx])
 
     return (

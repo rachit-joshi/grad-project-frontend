@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import { Switch, Route, Link } from 'react-router-dom';
 import './styles.css';
-import Vizl from './Vizl.js';
 import Controls from './Controls.js';
 import axios from 'axios';
 import Loader from './components/Loader';

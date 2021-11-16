@@ -1,5 +1,6 @@
 import React from "react";
-import Plotly from 'plotly.js/lib/core';
+import Plotly from 'plotly.js-dist';
+// import Plotly from 'plotly.js/lib/core';
 import * as d3 from 'd3';
 const DIVERGING_SCALE = d3.scaleDiverging(d3.interpolateRdYlBu);
 
