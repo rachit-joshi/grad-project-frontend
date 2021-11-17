@@ -2,11 +2,13 @@ import React from "react";
 import * as d3 from 'd3';
 const COLOR_SCALE = d3.schemeRdYlBu[4]
 
-const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, datasetModels}) => {
+const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, datasetModels, rankingModel, setRankingModel}) => {
 
     React.useEffect(() => {
         console.log(filteredWords,baseComparisonModel)
         if(filteredWords){dataPrep()}
+        setRankingModel(null)
+        console.log(dataset)
     },[filteredWords,filterSelect]);
 
 
@@ -53,6 +55,7 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
     }
 
     function createCoordPlot (plotData,minScale,maxScale) {
+        var topsModel = null
         d3.selectAll(`#coordplot > *`).remove();
 
             var margin ={top: 30, right: 50, bottom: 10, left: 50},
@@ -61,7 +64,27 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
 
 
             var selectFilterModel = function(d, Idx){
-                console.log(Idx);
+                //console.log(" kcabs ",Idx,rankingModel);
+                if (!topsModel){
+                    topsModel = Idx
+                    setRankingModel(Idx)
+                    highlightFilterModel(Idx)
+                }
+                else if (topsModel == Idx){
+                    //console.log("setNone")
+                    topsModel = null
+                    setRankingModel(null)
+                    deselectFilterModel()
+                }
+                else {
+                    //console.log("filtermodel")
+                    topsModel = Idx
+                    setRankingModel(Idx)
+                    highlightFilterModel(Idx)
+                }
+            }
+
+            var highlightFilterModel = function(Idx){
                 //first every group turns grey
                 d3.selectAll(".line")
                 .transition().duration(200)
@@ -82,25 +105,25 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
                     .style("opacity", "1")
             }
 
-            var mouseoverPath = function(event, Idx) {
+            var mouseoverPath = function(event, data) {
                 //console.log(d, Idx)
                 Tooltip
                   .style("opacity", 1)
-                d3.select(this)
-                  .style("stroke", "black")
+                d3.select(`.i${data.wordIdx}`)
+                  .style("stroke-width", "5.5px")
                   .style("opacity", 1)
               }
-              var mousemovePath = function(event, Idx) {
+              var mousemovePath = function(event, data) {
                     Tooltip
-                  .html("For word : " + `"${Idx.wordIdx}" similarity score with : <br>`)
+                  .html("For word : " + `"${data.wordIdx}" similarity score with : <br>`)
                 .style("left", (event.pageX) + "px")
                 .style("top", (event.pageY) + "px")
               }
               var mouseleavePath = function(event, Idx) {
                 Tooltip
                   .style("opacity", 0)
-                d3.select(this)
-                  .style("stroke", "none")
+                d3.select(`.i${Idx.wordIdx}`)
+                  .style("stroke-width", "1.5px")
                   .style("opacity", 0.8)
              }
 
@@ -111,7 +134,7 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
             .append("g")
             .attr("transform",
                     "translate(" + margin.left + "," + margin.top + ")")
-            //.on("click", deselectFilterModel)
+            //.on("click", deselectFilterModel) //make filtermodel state, check with idx in selectFilterModel , deselect if same column is pressed twice 
 
             var Tooltip = d3.select("#coordplot")
                 .append("div")
@@ -150,10 +173,11 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
                 .data(plotData)
                 .enter()
                 .append("path")
-                .attr("class", function (d) { return "line " + d.wordIdx+ " " + d.color[0] + " " + `${ d.color[1] ? d.color[1] : "" }` } ) // 2 class for each line: 'line' and the group name
+                .attr("class", function (d) { return "line " + `i${d.wordIdx}` + " " + d.color[0] + " " + `${ d.color[1] ? d.color[1] : "" }` } ) // 2 class for each line: 'line' and the group name
                 .attr("d",  path)
                 .style("fill", "none" )
                 .style("stroke", function(d){ return( color(d.color[0]))} )
+                .style("stroke-width", "1.5px")
                 .style("opacity", 0.5)
                 .on("mouseover", (event,d) =>  mouseoverPath(event,d))
                 .on("mousemove", (event,d) =>  mousemovePath(event,d))

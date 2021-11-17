@@ -27,7 +27,6 @@
 
 .localplot-container {
   flex: 5;
-  background-color: aliceblue;
   height: 100%;
   width: 100%;
   overflow-x: scroll;

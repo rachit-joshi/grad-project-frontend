@@ -9,6 +9,7 @@ const LocalInspection = ({brushedWords, setBrushedWords, dataset, selectedModels
     const [baseComparisonModel, setBaseComparisonModel] = React.useState(selectedModels.modelsIdx[0]);
     const [filterSelect, setFilterSelect] = React.useState("Least Similar");
     const [filteredWords, setFilteredWords] = React.useState(null);
+    const [rankingModel, setRankingModel] = React.useState(null)
 
     React.useEffect(() =>{
         setBrushedWords(null);
@@ -69,7 +70,7 @@ const LocalInspection = ({brushedWords, setBrushedWords, dataset, selectedModels
             <div>
                 <div>
                     <CoordPlot filteredWords={filteredWords} baseComparisonModel={baseComparisonModel} dataset={dataset}
-                                    filterSelect={filterSelect} datasetModels={dataset.models}/>
+                                    filterSelect={filterSelect} datasetModels={dataset.models} rankingModel={rankingModel} setRankingModel={setRankingModel}/>
                 </div>
             </div>
         </Container>
