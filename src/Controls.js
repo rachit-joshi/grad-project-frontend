@@ -36,7 +36,6 @@ const Controls = ({database, selectedModels, setSelectedModels, parameters, setP
 
     return (
         <div className="controlsContainer">
-            User Controls
             <div className="menu-container">
                 <Row className="dataselect-container">
                     <Col>
@@ -54,30 +53,32 @@ const Controls = ({database, selectedModels, setSelectedModels, parameters, setP
                             </Dropdown.Menu>
                         </Dropdown>
                     </Col>
-                </Row>
-                <Row className="options-container">
-                    <Col><div>Select Models</div></Col>
                     <Col>
-                        {selectedDataset.models?.map((model, index) => {
-                                return(
-                                        <div key={index} className="left-section">
-                                            <input
-                                                type="checkbox"
-                                                id={`custom-checkbox-${index}`}
-                                                name={model}
-                                                value={model}
-                                                checked={!!selectedModels.modelsIdx.includes(index)}
-                                                onChange={() => handleCheck(index)}
-                                            />
-                                            <label htmlFor={`custom-checkbox-${index}`}>{model}</label>
-                                        </div>
-                                )
-                        })}
+                        <Dropdown autoClose="outside">
+                            <Dropdown.Toggle variant="Primary" id="modelselect">Pair Models</Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                {selectedDataset.models?.map((model, index) => {
+                                        return(
+                                            <Dropdown.Item key={index} className="left-section">
+                                                <input
+                                                    type="checkbox"
+                                                    id={`custom-checkbox-${index}`}
+                                                    name={model}
+                                                    value={model}
+                                                    checked={!!selectedModels.modelsIdx.includes(index)}
+                                                    onChange={() => handleCheck(index)}
+                                                />
+                                                <label htmlFor={`custom-checkbox-${index}`}>{model}</label>
+                                            </Dropdown.Item>
+                                        )
+                                })}
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </Col>
                 </Row>
-                <div className="parameter-container">
+                <Row className="parameter-container">
                     <ParameterControl parameters={parameters} setParameters={setParameters} />
-                </div>
+                </Row>
             </div>
         </div>
     )

@@ -3,6 +3,7 @@ import {Container, Accordion} from 'react-bootstrap';
 import LocalInspecControls from './LocalInspecControls.js';
 //import ParaCoordPlot from './ParaCoordPlot.js';
 import CoordPlot from './CoordPlot.js';
+import LocalScatterPlot from './LocalScatterPlot.js';
 
 const LocalInspection = ({brushedWords, setBrushedWords, dataset, selectedModels, parameters, comparison, setComparison}) => {
     const [focusedWord, setFocusedWord] = React.useState(null);
@@ -14,6 +15,7 @@ const LocalInspection = ({brushedWords, setBrushedWords, dataset, selectedModels
     React.useEffect(() =>{
         setBrushedWords(null);
         setFilteredWords(null);
+        setFocusedWord(null)
     },[selectedModels])
     
     React.useEffect(()=>{
@@ -54,12 +56,6 @@ const LocalInspection = ({brushedWords, setBrushedWords, dataset, selectedModels
         setFilteredWords(modelSim);
     }
 
-    const focusWord = (wordIdx) => {
-        console.log(wordIdx);
-        console.log(dataset.modelData[dataset.models[selectedModels.modelsIdx[0]]][wordIdx])
-    }
-
-
     return (
         <Container>
             <div>
@@ -70,8 +66,12 @@ const LocalInspection = ({brushedWords, setBrushedWords, dataset, selectedModels
             <div>
                 <div>
                     <CoordPlot filteredWords={filteredWords} baseComparisonModel={baseComparisonModel} dataset={dataset}
-                                    filterSelect={filterSelect} datasetModels={dataset.models} rankingModel={rankingModel} setRankingModel={setRankingModel}/>
+                                    filterSelect={filterSelect} datasetModels={dataset.models} rankingModel={rankingModel} setRankingModel={setRankingModel}
+                                    setFocusedWord={setFocusedWord}/>
                 </div>
+            </div>
+            <div>
+                <LocalScatterPlot filteredWords={filteredWords} baseComparisonModel={baseComparisonModel} dataset={dataset} focusedWord={focusedWord} selectedModels={selectedModels} parameters={parameters}/>
             </div>
         </Container>
     )

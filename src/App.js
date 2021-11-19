@@ -15,8 +15,8 @@ const App = () => {
   const [comparison, setComparison] = React.useState([]);
   const [brushedWords, setBrushedWords] = React.useState(null);
   const [selectedModels, setSelectedModels] = React.useState({
-                                                              datasetId: 1,
-                                                              modelsIdx: [0,1],
+                                                              datasetId: 2,
+                                                              modelsIdx: [0,1,2,3],
                                                             });
   const [parameters, setParameters] = React.useState({
                                                       nearestNeighbors : 50,

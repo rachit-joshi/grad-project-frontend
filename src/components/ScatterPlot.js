@@ -8,21 +8,21 @@ const ScatterPlot = ({dataset, parameters, modelName, highlightPlots, spaceSaver
 
     const modelData = dataset.modelData[modelName];
     var GLOBAL_PROJECTION_PLOTLY_LAYOUT = {
+        xaxis: {
+            showgrid: false,
+            showticklabels: false,
+            zeroline: false,
+            showline: false,
+        },
+        yaxis: {
+            showgrid: false,
+            showticklabels: false,
+            zeroline: false,
+            showline: false,
+        },
         width: 175,
         height: 175,
         showlegend: false,
-        xaxes: {
-            showticklabels: false,
-            showgrid: false,
-            zeroline: false,
-            showline: false,
-        },
-        yaxes: {
-            showticklabels: false,
-            showgrid: false,
-            zeroline: false,
-            showline: false,
-        },
         margin: {
             l: 0,
             r: 0,
@@ -40,7 +40,7 @@ const ScatterPlot = ({dataset, parameters, modelName, highlightPlots, spaceSaver
     };
 
     React.useEffect(() => {
-        createplot(modelData);
+        createplot(modelData)
     },[modelName,parameters.projectionMethod,spaceSaver])
 
     React.useEffect(() => {
@@ -76,14 +76,11 @@ const ScatterPlot = ({dataset, parameters, modelName, highlightPlots, spaceSaver
           const trace3 = {
             x: modelData.map(obj => obj[parameters.projectionMethod][0]),
             y: modelData.map(obj => obj[parameters.projectionMethod][1]),
-            xaxis: 'x3',
-            yaxis: 'y3',
             mode: 'markers',
             type: 'scatter',
             text: modelData.map(obj => obj.word),
             textposition: 'bottom center',
             marker: { size: 4, opacity: 0.9, color: "#a8abad"},
-            type: 'scatterg1',
             hoverinfo: 'text',
           };
           
@@ -101,6 +98,7 @@ const ScatterPlot = ({dataset, parameters, modelName, highlightPlots, spaceSaver
     return (
         <>
                 <div id={modelName}></div>
+                <div className="plotlabel">{modelName}</div>
         </>
     )
 }

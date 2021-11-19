@@ -160,6 +160,7 @@ const Histogram = ({dataset, models, parameters, comparison, setComparison, dist
         <>
              
                 <div id={`${models[0]}${models[1]}${distanceMetric}`}></div>
+                <div className="plotlabel">{models[0]} vs {models[1]} - {distanceMetric}</div>
             
         </>
     )

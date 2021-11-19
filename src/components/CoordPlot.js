@@ -2,7 +2,7 @@ import React from "react";
 import * as d3 from 'd3';
 const COLOR_SCALE = d3.schemeRdYlBu[4]
 
-const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, datasetModels, rankingModel, setRankingModel}) => {
+const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, datasetModels, rankingModel, setRankingModel, setFocusedWord}) => {
 
     React.useEffect(() => {
         console.log(filteredWords,baseComparisonModel)
@@ -48,7 +48,6 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
             })
         })
         console.log(plotData)
-        //console.log(maxScale)
         if (plotData) {
             createCoordPlot(plotData,minScale,maxScale)
         }
@@ -64,20 +63,17 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
 
 
             var selectFilterModel = function(d, Idx){
-                //console.log(" kcabs ",Idx,rankingModel);
                 if (!topsModel){
                     topsModel = Idx
                     setRankingModel(Idx)
                     highlightFilterModel(Idx)
                 }
                 else if (topsModel == Idx){
-                    //console.log("setNone")
                     topsModel = null
                     setRankingModel(null)
                     deselectFilterModel()
                 }
                 else {
-                    //console.log("filtermodel")
                     topsModel = Idx
                     setRankingModel(Idx)
                     highlightFilterModel(Idx)
@@ -106,26 +102,40 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
             }
 
             var mouseoverPath = function(event, data) {
-                //console.log(d, Idx)
                 Tooltip
                   .style("opacity", 1)
                 d3.select(`.i${data.wordIdx}`)
                   .style("stroke-width", "5.5px")
                   .style("opacity", 1)
               }
-              var mousemovePath = function(event, data) {
-                    Tooltip
-                  .html("For word : " + `"${data.wordIdx}" similarity score with : <br>`)
-                .style("left", (event.pageX) + "px")
-                .style("top", (event.pageY) + "px")
-              }
-              var mouseleavePath = function(event, Idx) {
+            var mousemovePath = function(event, data) {
+                // console.log(dataset.modelData[Object.keys(dataset.modelData)[0]][data.wordIdx].word)
+                // console.log(dataset.modelData[Object.keys(dataset.modelData)[0]][data.wordIdx])
+                // console.log(dataset.modelData[Object.keys(dataset.modelData)[0]])
+                // console.log(Object.keys(dataset.modelData)[0])
+                //console.log("tooltipdata",data)
                 Tooltip
-                  .style("opacity", 0)
-                d3.select(`.i${Idx.wordIdx}`)
-                  .style("stroke-width", "1.5px")
-                  .style("opacity", 0.8)
-             }
+                .html("For word : " + `"${dataset.modelData[Object.keys(dataset.modelData)[0]][data.wordIdx].word}" similarity score with : <br>`)
+            .style("left", (event.pageX) + "px")
+            .style("top", (event.pageY) + "px")
+            }
+
+            var mouseleavePath = function(event, Idx) {
+            Tooltip
+                .style("opacity", 0)
+            d3.select(`.i${Idx.wordIdx}`)
+                .style("stroke-width", "1.5px")
+                .style("opacity", 0.8)
+            }
+
+            var wordClick = (event, data) => {
+                // console.log(dataset.modelData[Object.keys(dataset.modelData)[0]][data.wordIdx].word)
+                // console.log(dataset.modelData[Object.keys(dataset.modelData)[0]][data.wordIdx])
+                // console.log(dataset.modelData[Object.keys(dataset.modelData)[0]])
+                // console.log(Object.keys(dataset.modelData)[0])
+                // console.log("tooltipdata",data)
+                setFocusedWord(data.wordIdx)
+            }
 
             var svg = d3.select("#coordplot")
             .append("svg")
@@ -134,7 +144,6 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
             .append("g")
             .attr("transform",
                     "translate(" + margin.left + "," + margin.top + ")")
-            //.on("click", deselectFilterModel) //make filtermodel state, check with idx in selectFilterModel , deselect if same column is pressed twice 
 
             var Tooltip = d3.select("#coordplot")
                 .append("div")
@@ -182,6 +191,7 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
                 .on("mouseover", (event,d) =>  mouseoverPath(event,d))
                 .on("mousemove", (event,d) =>  mousemovePath(event,d))
                 .on("mouseleave", (event,d) =>  mouseleavePath(event,d))
+                .on("click", (event,d) =>  wordClick(event,d))
 
 
                 svg.selectAll("myAxis")
