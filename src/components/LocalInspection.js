@@ -5,7 +5,7 @@ import LocalInspecControls from './LocalInspecControls.js';
 import CoordPlot from './CoordPlot.js';
 import LocalScatterPlot from './LocalScatterPlot.js';
 
-const LocalInspection = ({brushedWords, setBrushedWords, dataset, selectedModels, parameters, comparison, setComparison}) => {
+const LocalInspection = ({brushedWords, setBrushedWords, dataset, selectedModels, parameters, comparison, setComparison, wordReveal, setWordReveal}) => {
     const [focusedWord, setFocusedWord] = React.useState(null);
     const [baseComparisonModel, setBaseComparisonModel] = React.useState(selectedModels.modelsIdx[0]);
     const [filterSelect, setFilterSelect] = React.useState("Least Similar");
@@ -71,7 +71,8 @@ const LocalInspection = ({brushedWords, setBrushedWords, dataset, selectedModels
                 </div>
             </div>
             <div>
-                <LocalScatterPlot filteredWords={filteredWords} baseComparisonModel={baseComparisonModel} dataset={dataset} focusedWord={focusedWord} selectedModels={selectedModels} parameters={parameters}/>
+                <LocalScatterPlot filteredWords={filteredWords} baseComparisonModel={baseComparisonModel} dataset={dataset} focusedWord={focusedWord} selectedModels={selectedModels} 
+                                    parameters={parameters} wordReveal={wordReveal} setWordReveal={setWordReveal}/>
             </div>
         </Container>
     )

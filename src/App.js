@@ -24,6 +24,7 @@ const App = () => {
                                                       projectionMethod : 'embedding_pca',
                                                     });
 const [loading, setLoading] = React.useState(true);
+const [wordReveal, setWordReveal] = React.useState(null)
 
   React.useEffect(()=>{
     axios.get("http://localhost:4000/dataset")
@@ -52,12 +53,12 @@ const [loading, setLoading] = React.useState(true);
             </div>
             <div className="localplot-container">
                   <LocalInspection brushedWords={brushedWords} setBrushedWords={setBrushedWords} dataset={database[selectedModels.datasetId-1]} selectedModels={selectedModels} parameters={parameters} 
-                          comparison={comparison} setComparison={setComparison}/>
+                          comparison={comparison} setComparison={setComparison} wordReveal={wordReveal} setWordReveal={setWordReveal}/>
             </div>
           </div>
           <div className="canvas">
             <Visualization dataset={database[selectedModels.datasetId-1]} selectedModels={selectedModels} parameters={parameters} 
-                          comparison={comparison} setComparison={setComparison} setBrushedWords={setBrushedWords}/>
+                          comparison={comparison} setComparison={setComparison} setBrushedWords={setBrushedWords} wordReveal={wordReveal} setWordReveal={setWordReveal}/>
           </div>
           </>
         )}

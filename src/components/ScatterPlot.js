@@ -4,7 +4,7 @@ import Plotly from 'plotly.js-dist';
 import * as d3 from 'd3';
 const DIVERGING_SCALE = d3.scaleDiverging(d3.interpolateRdYlBu);
 
-const ScatterPlot = ({dataset, parameters, modelName, highlightPlots, spaceSaver}) => {
+const ScatterPlot = ({dataset, parameters, modelName, highlightPlots, spaceSaver, wordReveal, setWordReveal}) => {
 
     const modelData = dataset.modelData[modelName];
     var GLOBAL_PROJECTION_PLOTLY_LAYOUT = {
@@ -45,25 +45,43 @@ const ScatterPlot = ({dataset, parameters, modelName, highlightPlots, spaceSaver
 
     React.useEffect(() => {
         updatePlot()
-    },[highlightPlots])
+    },[highlightPlots, wordReveal])
 
     const updatePlot = () => {
-        if (highlightPlots.models?.includes(modelName)){
-            var allColors = highlightPlots.simValues.map(val => DIVERGING_SCALE(val));
+        console.log(wordReveal)
+        if(!wordReveal){
+            if (highlightPlots.models?.includes(modelName)){
+                var allColors = highlightPlots.simValues.map(val => DIVERGING_SCALE(val));
+                let updatedColors ={
+                    marker: {
+                        size: 4,
+                        color: allColors,
+                        opacity: 0.9,
+                    },
+                }
+                Plotly.restyle(modelName, updatedColors);
+            }
+            else{
+                let updatedColors ={
+                    marker: {
+                        size: 4,
+                        color: "#a8abad",
+                        opacity: 0.9,
+                    },
+                }
+                Plotly.restyle(modelName, updatedColors);
+            }
+        }
+        else{
+            //console.log(modelData,modelName,wordReveal[modelName]);
+            allColors = new Array(modelData.length).fill('#D3D3D3')
+            wordReveal[modelName].forEach((word) => {
+                allColors[word.idx] = word.color
+            })
             let updatedColors ={
                 marker: {
                     size: 4,
                     color: allColors,
-                    opacity: 0.9,
-                },
-            }
-            Plotly.restyle(modelName, updatedColors);
-        }
-        else{
-            let updatedColors ={
-                marker: {
-                    size: 4,
-                    color: "#a8abad",
                     opacity: 0.9,
                 },
             }

@@ -4,7 +4,7 @@ import Histogram from "./Histogram";
 import {Row, Col} from 'react-bootstrap';
 import "../styles.css"
 
-const Visualization = ({dataset, selectedModels, parameters, comparison, setComparison, setBrushedWords}) => {
+const Visualization = ({dataset, selectedModels, parameters, comparison, setComparison, setBrushedWords, wordReveal, setWordReveal}) => {
     const [activeModels, setActiveModels] = React.useState([])
     const [allGraphs, setAllGraphs] = React.useState([])
     const [loading, setLoading] = React.useState(true)
@@ -76,7 +76,8 @@ const Visualization = ({dataset, selectedModels, parameters, comparison, setComp
                             case 'Scatter':
                                 return (
                                     <Col key={colIdx} md="auto">
-                                        <ScatterPlot dataset={dataset} modelName={graph.models} parameters={parameters} highlightPlots={highlightPlots} spaceSaver={spaceSaver}/>
+                                        <ScatterPlot dataset={dataset} modelName={graph.models} parameters={parameters} highlightPlots={highlightPlots} spaceSaver={spaceSaver}
+                                        wordReveal={wordReveal} setWordReveal={setWordReveal}/>
                                     </Col>
                                 )
                                 break;

@@ -134,7 +134,11 @@ const CoordPlot = ({filteredWords,baseComparisonModel,dataset,filterSelect, data
                 // console.log(dataset.modelData[Object.keys(dataset.modelData)[0]])
                 // console.log(Object.keys(dataset.modelData)[0])
                 // console.log("tooltipdata",data)
-                setFocusedWord(data.wordIdx)
+                let focusedWordData = {
+                    wordIdx: data.wordIdx,
+                    wordData: data
+                }
+                setFocusedWord(focusedWordData)
             }
 
             var svg = d3.select("#coordplot")

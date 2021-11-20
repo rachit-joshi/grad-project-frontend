@@ -1,8 +1,9 @@
 import React from "react";
 import NeighborhoodPlot from "./NeighborhoodPlot.js";
 import {Row, Col} from 'react-bootstrap';
+import FocusedWordInfo from "./FocusedWordInfo.js";
 
-const LocalScatterPlot = ({filteredWords, baseComparisonModel, dataset, focusedWord, selectedModels, parameters}) => {
+const LocalScatterPlot = ({filteredWords, baseComparisonModel, dataset, focusedWord, selectedModels, parameters, wordReveal, setWordReveal}) => {
 
     const [allPlots, setAllPlots] = React.useState({})
     const [loading, setLoading] = React.useState(true)
@@ -10,8 +11,9 @@ const LocalScatterPlot = ({filteredWords, baseComparisonModel, dataset, focusedW
     React.useEffect(() => {
         setLoading(true)
         !!focusedWord && console.log(focusedWord,dataset,baseComparisonModel)
-        !!filteredWords && getPlottingData()
-    },[focusedWord])
+        !!filteredWords && !!focusedWord && getPlottingData()
+        setWordReveal(null)
+    },[focusedWord, filteredWords, baseComparisonModel])
 
     const getIntersect = (wordNeighbors) => {
         //console.log(wordNeighbors, key, val)
@@ -33,7 +35,7 @@ const LocalScatterPlot = ({filteredWords, baseComparisonModel, dataset, focusedW
         // console.log(selectedModels)
         var wordNeighbors = {}
         selectedModels.modelsIdx.forEach((model) => {
-            var modelNeighbors = dataset.modelData[dataset.models[model]][focusedWord].nearest_neighbors[filteredMetric].knn_ind.slice(0,parameters.nearestNeighbors)
+            var modelNeighbors = dataset.modelData[dataset.models[model]][focusedWord.wordIdx].nearest_neighbors[filteredMetric].knn_ind.slice(0,parameters.nearestNeighbors)
             wordNeighbors[dataset.models[model]] = modelNeighbors
         })
         console.log(wordNeighbors)
@@ -42,7 +44,7 @@ const LocalScatterPlot = ({filteredWords, baseComparisonModel, dataset, focusedW
         Object.entries(wordNeighbors).forEach((entry) => {
             var allWordData = []
             const [key,value] = entry
-            var focusedWordPush = dataset.modelData[key][focusedWord]
+            var focusedWordPush = dataset.modelData[key][focusedWord.wordIdx]
             focusedWordPush.color = "#c41616"
             allWordData.push(focusedWordPush)
             value.forEach((val) => {
@@ -58,10 +60,21 @@ const LocalScatterPlot = ({filteredWords, baseComparisonModel, dataset, focusedW
         setLoading(false)
     }
 
+    const handleWordReveal = () =>{
+        if(!wordReveal){
+            setWordReveal(allPlots)
+        }
+        else{
+            setWordReveal(null)
+        }
+    }
+
     return (
         <div className="localscatterplotcontainer">
             <Row className="focusedworddisplay">
-                {!!focusedWord && dataset.modelData[dataset.models[baseComparisonModel]][focusedWord].word}
+                <Col>
+                    <FocusedWordInfo focusedWord={focusedWord} baseComparisonModel={baseComparisonModel} dataset={dataset} handleWordReveal={handleWordReveal}/>
+                </Col>
             </Row>
             <Row className="neighborplotcontainer">
                 { !loading && allPlots && Object.entries(allPlots).map((value, key) => (

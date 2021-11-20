@@ -49,3 +49,12 @@
   justify-content: center;
   padding-top: 3%;
 }
+
+.wordInformation {
+  font-size: 10px;
+}
+
+.displayInformation {
+  font-size: 15px;
+  font-weight: bold;
+}
